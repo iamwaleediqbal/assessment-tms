@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id            Int        @default(autoincrement()) @id
+  status        Status     @default(ACTIVE)
+  created_at    DateTime   @default(now())
+  completed_at  DateTime?
+  player_id     Int?
+  players       Player[]
+  white_win     Boolean?
+}
+
+model Player {
+  id                 Int      @default(autoincrement()) @id
+  associated_with    Game?    @relation(fields: [game_id], references: [id])
+  game_id            Int?  
+  color              String
+  created_at         DateTime @default(now())
+  moves              Move[]
+}
+
+model Move {
+  id                 Int        @default(autoincrement()) @id
+  from_position      String  
+  to_position        String
+  allowed_positions  String[]
+  piece_type         PieceType
+  is_captured        Boolean?   @default(false)
+  piece_ownership    Player?    @relation(fields: [player_id], references: [id])
+  player_id          Int?
+  created_at         DateTime   @default(now())
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+}
+
+enum PieceType {
+  K
+  Q
+  R
+  B
+  N
+  P
+  Empty
+}
+
