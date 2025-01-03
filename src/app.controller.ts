@@ -40,7 +40,7 @@ export class AppController {
 
   @Get('api/games/:id/moves')
   async getMovesByGameId(@Param('id') id: string): Promise<GameModel> {
-    return this.gameService.game({ id: Number(id) });
+    return this.gameService.movesHistory({ id: Number(id) });
   }
 
   @Get('api/games/:id/analysis')

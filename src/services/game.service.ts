@@ -13,7 +13,26 @@ export class GameService {
     return this.prisma.game.findUnique({
       where: gameWhereUniqueInput,
       include: {
-        players: true
+        players: {
+          include: {
+            moves: true
+          }
+        }
+      },
+    });
+  }
+
+  async movesHistory(
+    gameWhereUniqueInput: Prisma.GameWhereUniqueInput,
+  ): Promise<Game | null> {
+    return this.prisma.game.findUnique({
+      where: gameWhereUniqueInput,
+      include: {
+        players: {
+          include: {
+            moves: true
+          }
+        }
       },
     });
   }
